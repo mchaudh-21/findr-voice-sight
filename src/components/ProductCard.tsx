@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ExternalLink, Volume2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { ProductDetail } from './ProductDetail';
 
 interface Product {
   id: string;
@@ -19,6 +20,7 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { toast } = useToast();
+  const [showDetail, setShowDetail] = useState(false);
 
   const handleTextToSpeech = () => {
     if ('speechSynthesis' in window) {
@@ -57,11 +59,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <Button
               size="sm"
               className="flex-1 text-xs"
-              onClick={() => window.open(product.productUrl, '_blank')}
-              aria-label={`View ${product.name} on ${product.vendor}`}
+              onClick={() => setShowDetail(true)}
+              aria-label={`View details for ${product.name}`}
             >
               <ExternalLink className="h-3 w-3 mr-1" />
-              View
+              Details
             </Button>
             <Button
               variant="outline"
@@ -74,6 +76,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </div>
         </div>
       </CardContent>
+      
+      <ProductDetail
+        open={showDetail}
+        onOpenChange={setShowDetail}
+        product={product}
+      />
     </Card>
   );
 };
